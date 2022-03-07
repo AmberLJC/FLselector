@@ -1,0 +1,52 @@
+# 1,660,820 clt
+# Configuration file of Kuiper training experiment
+
+# ========== Cluster configuration ========== 
+# ip address of the parameter server (need 1 GPU)
+
+ps_ip: h3.fedscale-exp.gaia-pg0.wisc.cloudlab.us
+
+# ip address of each worker:# of gpus on this worker
+# Note that if we collocate ps and worker, then we need to decrease this number of gpus by 1
+# E.g., master node has 4 GPUs, then 1 for the ps, and worker should be set to: worker:3
+worker_ips: 
+    - h3.fedscale-exp.gaia-pg0.wisc.cloudlab.us:[0,1] # worker_ip: # of gpus  
+
+exp_path: $HOME/experiment/FedScale/core
+
+# Entry function of executor and aggregator under $exp_path
+executor_entry: executor.py
+
+aggregator_entry: aggregator.py
+
+auth:
+    ssh_user: "JIACHEN"
+    ssh_private_key: ""
+
+# cmd to run before we can indeed run kuiper (in order)
+setup_commands:
+    - source /users/JIACHEN/experiment/anaconda3/bin/activate fedscale    
+    - export NCCL_SOCKET_IFNAME='enp94s0f0'         # Run "ifconfig" to ensure the right NIC for nccl if you have multiple NICs
+
+# ========== Additional job configuration ========== 
+# Default parameters are specified in argParser.py, wherein more description of the parameter can be found
+
+job_conf: 
+    - log_path: $HOME/experiment/FedScale/core/evals # Path of log files
+    - job_name: reddit_iid                # Generate logs under this folder: log_path/job_name/time_stamp
+    - total_worker: 100                     # Number of participants per round, we use K=100 in our paper, large K will be much slower
+    - data_set: blog                     # Dataset: openImg, google_speech, stackoverflow
+    - data_dir: /users/JIACHEN/experiment/FedScale/dataset/data/reddit
+    - device_conf_file: /users/JIACHEN/experiment/FedScale/dataset/data/device_info/client_device_capacity  # Path of the client trace
+    - device_avail_file: $HOME/experiment/FedScale/dataset/data/device_info/client_behave_trace
+    - model: albert-base-v2  
+    - eval_interval: 10                     # How many rounds to run a testing on the testing set
+    - epochs: 1000                
+    - num_loaders: 8
+    - batch_size: 16
+    - test_bsz: 16
+    - task: nlp
+    - test_ratio: 0.2
+    - learning_rate: 5e-5
+    - min_learning_rate: 1e-6
+    - local_steps: 10

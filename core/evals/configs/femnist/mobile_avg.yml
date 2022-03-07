@@ -1,0 +1,56 @@
+# Configuration file of Kuiper training experiment
+
+# ========== Cluster configuration ========== 
+# ip address of the parameter server (need 1 GPU)
+ps_ip: h1.fed.gaia-pg0.clemson.cloudlab.us
+
+# ip address of each worker:# of gpus on this worker
+worker_ips:
+    - h1.fed.gaia-pg0.clemson.cloudlab.us:[4,4] # worker_ip: # of gpus
+    - h2.fed.gaia-pg0.clemson.cloudlab.us:[4,4] # worker_ip: # of gpus 
+    - h3.fed.gaia-pg0.clemson.cloudlab.us:[4,4] # worker_ip: # of gpus 
+
+
+exp_path: $HOME/FedScale/core
+
+# Entry function of executor and aggregator under $exp_path
+executor_entry: executor.py
+
+aggregator_entry: aggregator.py
+
+auth:
+    ssh_user: "JIACHEN"
+    ssh_private_key: ""
+
+
+# cmd to run before we can indeed run kuiper (in order)
+setup_commands:
+    - source /users/JIACHEN/anaconda3/bin/activate fedscale    
+    - export NCCL_SOCKET_IFNAME="enp94s0f0"    
+
+# ========== Additional job configuration ========== 
+# Default parameters are specified in argParser.py, wherein more description of the parameter can be found
+
+job_conf: 
+    - log_path: $HOME/FedScale/core/evals # Path of log files
+    - job_name: femnist_yogi_avg                # Generate logs under this folder: log_path/job_name/time_stamp
+    - total_worker: 100                      # Number of participants per round, we use K=100 in our paper, large K will be much slower
+    - data_set: femnist                     # Dataset: openImg, google_speech, stackoverflow
+    - data_dir: /users/JIACHEN/FedScale/dataset/data/femnist/
+    - data_map_file: /users/JIACHEN/FedScale/dataset/data/femnist/client_data_mapping/train.csv         # Allocation of data to each client, turn to iid setting if not provided
+    - device_conf_file: /users/JIACHEN/FedScale/dataset/data/device_info/client_device_capacity    # Path of the client trace
+    - device_avail_file: $HOME/FedScale/dataset/data/device_info/client_behave_trace
+    - sample_mode: random                                  # Client selection: random, kuiper, random by default
+    - model: mobilenet_v2                            # Models: shufflenet_v2_x2_0, mobilenet_v2, resnet34, albert-base-v2
+    - gradient_policy: fed-avg                # {"fed-yogi", "fed-prox", "fed-avg"}, "fed-avg" by default
+    - eval_interval: 10                     # How many rounds to run a testing on the testing set
+    - epochs: 1000                          # Number of rounds to run this training. We use 1000 in our paper, while it may converge w/ ~400 rounds
+    - filter_less: 20
+    - overcommitment: 1.3
+    - num_loaders: 4
+    - yogi_eta: 3e-3 
+    - yogi_tau: 1e-8
+    - local_steps: 10
+    - learning_rate: 0.05
+    - batch_size: 25
+    - test_bsz: 5
