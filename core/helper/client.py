@@ -1,7 +1,7 @@
 
 class Client(object):
 
-    def __init__(self, hostId, clientId, speed, traces=None):
+    def __init__(self, hostId, clientId, speed, budget = None, traces=None):
         self.hostId = hostId
         self.clientId = clientId
         self.compute_speed = speed['computation']
@@ -9,6 +9,8 @@ class Client(object):
         self.score = 0
         self.traces = traces
         self.behavior_index = 0
+        self.train_time = 0
+        self.budget = budget
 
     def getScore(self):
         return self.score
@@ -19,6 +21,9 @@ class Client(object):
     def isActive(self, cur_time):
         if self.traces is None:
             return True
+
+        if self.train_time >= self.budget:
+            return False
             
         norm_time = cur_time % self.traces['finish_time']
 
@@ -43,3 +48,7 @@ class Client(object):
                 'communication': (upload_size+download_size)/float(self.bandwidth)}
         # return (augmentation_factor * batch_size * upload_epoch*float(self.compute_speed)/1000. + \
         #         (upload_size+download_size)/float(self.bandwidth))
+
+    def register_train_time(self):
+        self.train_time += 1
+        

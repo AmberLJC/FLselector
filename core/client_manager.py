@@ -12,7 +12,7 @@ class clientManager(object):
         self.mode = mode
         self.filter_less = args.filter_less
         self.filter_more = args.filter_more
-
+        self.client_budget = args.client_budget
         self.ucbSampler = None 
 
         if self.mode == 'oort': 
@@ -41,7 +41,7 @@ class clientManager(object):
         uniqueId = self.getUniqueId(hostId, clientId)
         user_trace = None if self.user_trace is None else self.user_trace[self.user_trace_keys[int(clientId)%len(self.user_trace)]]
 
-        self.Clients[uniqueId] = Client(hostId, clientId, speed, user_trace)
+        self.Clients[uniqueId] = Client(hostId, clientId, speed, user_trace, self.client_budget)
 
         # remove clients
         if size >= self.filter_less and size <= self.filter_more:
@@ -95,7 +95,8 @@ class clientManager(object):
             }
 
             self.ucbSampler.update_client_util(clientId, feedbacks=feedbacks)
-
+        self.Clients[self.getUniqueId(0, clientId)].register_train_time()
+        
     def registerClientScore(self, clientId, reward):
         self.Clients[self.getUniqueId(0, clientId)].registerReward(reward)
 
@@ -163,7 +164,8 @@ class clientManager(object):
             clients_online = self.feasibleClients
         else:
             clients_online = [clientId for clientId in self.feasibleClients if self.Clients[self.getUniqueId(0, clientId)].isActive(cur_time)]
-
+        
+        # filter by client with enough privacy budget
         logging.info(f"Wall clock time: {round(cur_time)}, {len(clients_online)} clients online, " + \
                     f"{len(self.feasibleClients)-len(clients_online)} clients offline")
 

@@ -175,6 +175,10 @@ parser.add_argument('--noise-max', default=0.5,
 parser.add_argument('--no-bidirectional', dest='bidirectional', action='store_false', default=True,
                     help='Turn off bi-directional RNNs, introduces lookahead convolution')
 
+# for resource budget
+parser.add_argument('--client_budget', default=100, type=int, help='Max training time of each client')
+
+
 args, unknown = parser.parse_known_args()
 args.use_cuda = eval(args.use_cuda)
 
