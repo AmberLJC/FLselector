@@ -21,7 +21,7 @@ class Client(object):
     def isActive(self, cur_time):
         if self.traces is None:
             return True
-
+        
         if self.train_time >= self.budget:
             return False
             

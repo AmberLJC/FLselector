@@ -3,6 +3,7 @@ import math
 from random import Random
 import pickle
 import logging
+import numpy as np
 
 class clientManager(object):
 
@@ -41,7 +42,7 @@ class clientManager(object):
         uniqueId = self.getUniqueId(hostId, clientId)
         user_trace = None if self.user_trace is None else self.user_trace[self.user_trace_keys[int(clientId)%len(self.user_trace)]]
 
-        self.Clients[uniqueId] = Client(hostId, clientId, speed, user_trace, self.client_budget)
+        self.Clients[uniqueId] = Client(hostId, clientId, speed, self.client_budget, user_trace)
 
         # remove clients
         if size >= self.filter_less and size <= self.filter_more:
@@ -175,6 +176,7 @@ class clientManager(object):
         return self.Clients[self.getUniqueId(0, clientId)].isActive(cur_time)
 
     def resampleClients(self, numOfClients, cur_time=0):
+        self.get_train_time_stats()
         self.count += 1
 
         clients_online = self.getFeasibleClients(cur_time)
@@ -210,3 +212,12 @@ class clientManager(object):
             return self.ucbSampler.get_median_reward()
         return 0.
 
+    def get_train_time_stats(self):
+        
+        train_times = [self.Clients[self.getUniqueId(0, clientId)].train_time for clientId in self.feasibleClients ]
+        frequency, bins = np.histogram(train_times, bins=10, range=[0, 10])
+        logging.info('Training times distribution :')
+        for b, f in zip(bins[1:], frequency):
+            logging.info(f"{b-1}: {' '.join(np.repeat('*', f)) }")
+        
+        
