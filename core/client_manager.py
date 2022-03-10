@@ -217,7 +217,7 @@ class clientManager(object):
         train_times = [self.Clients[self.getUniqueId(0, clientId)].train_time for clientId in self.feasibleClients ]
         frequency, bins = np.histogram(train_times, bins=8, range=[0, 40])
         logging.info('Training times distribution :')
-        for b, f in zip(bins[1:], frequency):
+        for b, f in zip(bins, frequency):
             logging.info(f"> {int(b)}: {f} clients")
             #logging.info(f"{b-1}: {' '.join(np.repeat('*', f)) }")
         
