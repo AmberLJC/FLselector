@@ -164,7 +164,7 @@ class clientManager(object):
         if self.user_trace is None:
             clients_online = self.feasibleClients
         else:
-            clients_online = [clientId for clientId in self.feasibleClients if self.Clients[self.getUniqueId(0, clientId)].isActive(cur_time)]
+            clients_online = [clientId for clientId in self.feasibleClients if self.Clients[self.getUniqueId(0, clientId)].isFeasible(cur_time)]
         
         # filter by client with enough privacy budget
         logging.info(f"Wall clock time: {round(cur_time)}, {len(clients_online)} clients online, " + \
@@ -215,9 +215,10 @@ class clientManager(object):
     def get_train_time_stats(self):
         
         train_times = [self.Clients[self.getUniqueId(0, clientId)].train_time for clientId in self.feasibleClients ]
-        frequency, bins = np.histogram(train_times, bins=10, range=[0, 10])
+        frequency, bins = np.histogram(train_times, bins=8, range=[0, 40])
         logging.info('Training times distribution :')
         for b, f in zip(bins[1:], frequency):
-            logging.info(f"{b-1}: {' '.join(np.repeat('*', f)) }")
+            logging.info(f"> {int(b)}: {f} clients")
+            #logging.info(f"{b-1}: {' '.join(np.repeat('*', f)) }")
         
         

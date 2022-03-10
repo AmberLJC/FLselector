@@ -17,14 +17,16 @@ class Client(object):
 
     def registerReward(self, reward):
         self.score = reward
-
+        
+    def isFeasible(self, cur_time):
+        if self.train_time >= self.budget:
+            return False
+        return self.isActive(cur_time)
+        
     def isActive(self, cur_time):
         if self.traces is None:
             return True
         
-        if self.train_time >= self.budget:
-            return False
-            
         norm_time = cur_time % self.traces['finish_time']
 
         if norm_time > self.traces['inactive'][self.behavior_index]:
