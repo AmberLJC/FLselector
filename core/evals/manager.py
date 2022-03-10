@@ -62,7 +62,7 @@ def process_cmd(yaml_file,local = False):
     total_gpu_processes =  sum([sum(x) for x in total_gpus])
     # =========== Submit job to parameter server ============
     running_vms.add(ps_ip)
-    ps_cmd = f" python {yaml_conf['exp_path']}/{yaml_conf['aggregator_entry']} {conf_script} --this_rank=0 --num_executors={total_gpu_processes} --executor_configs={executor_configs} "
+    ps_cmd = f" python {yaml_conf['exp_path']}/{yaml_conf['aggregator_entry']} {conf_script} --this_rank=0 --num_executors={total_gpu_processes} --executor_configs={executor_configs}& "
 
     with open(f"{job_name}_logging", 'wb') as fout:
         pass
@@ -84,14 +84,13 @@ def process_cmd(yaml_file,local = False):
 
         for cuda_id in range(len(gpu)):
             for _  in range(gpu[cuda_id]):
-                worker_cmd = f" python {yaml_conf['exp_path']}/{yaml_conf['executor_entry']} {conf_script} --this_rank={rank_id} --num_executors={total_gpu_processes} --cuda_device=cuda:{cuda_id} "
+                worker_cmd = f" python {yaml_conf['exp_path']}/{yaml_conf['executor_entry']} {conf_script} --this_rank={rank_id} --num_executors={total_gpu_processes} --cuda_device=cuda:{cuda_id} & "
                 rank_id += 1
 
                 with open(f"{job_name}_logging", 'a') as fout:
                     time.sleep(2)
                     if local:
-                        subprocess.Popen(f'{worker_cmd}',
-                                         shell=True, stdout=fout, stderr=fout)
+                        subprocess.Popen(f'{worker_cmd}',shell=True, stdout=fout, stderr=fout)
                     else:
                         subprocess.Popen(f'ssh {submit_user}{worker} "{setup_cmd} {worker_cmd}"',
                                         shell=True, stdout=fout, stderr=fout)

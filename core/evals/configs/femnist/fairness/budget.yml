@@ -31,7 +31,7 @@ setup_commands:
 
 job_conf: 
     - log_path: $HOME/FLselector/core/evals # Path of log files
-    - job_name: femnist_oort_budget10                   # Generate logs under this folder: log_path/job_name/time_stamp
+    - job_name: femnist_oort_budget5                   # Generate logs under this folder: log_path/job_name/time_stamp
     - total_worker: 100                      # Number of participants per round, we use K=100 in our paper, large K will be much slower
     - data_set: femnist                     # Dataset: openImg, google_speech, stackoverflow
     - data_dir: /users/JIACHEN/FedScale/dataset/data/femnist/
@@ -53,4 +53,4 @@ job_conf:
     - batch_size: 25
     - test_bsz: 5
 #    - use_cuda: False
-    - client_budget: 10
+    - client_budget: 5
