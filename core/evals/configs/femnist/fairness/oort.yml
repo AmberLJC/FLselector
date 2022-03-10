@@ -2,15 +2,14 @@
 
 # ========== Cluster configuration ========== 
 # ip address of the parameter server (need 1 GPU)
-ps_ip: h1.linux.gaia-pg0.wisc.cloudlab.us
+ps_ip: h1.sched.gaia-pg0.wisc.cloudlab.us
 
 # ip address of each worker:# of gpus on this worker
 worker_ips:
-    - h1.linux.gaia-pg0.wisc.cloudlab.us:[6] # worker_ip: # of gpus 
-    - h2.linux.gaia-pg0.wisc.cloudlab.us:[6] # worker_ip: # of gpus
+    - h1.sched.gaia-pg0.wisc.cloudlab.us:[6] # worker_ip: # of gpus 
 
 
-exp_path: $HOME/FedScale/core
+exp_path: $HOME/FLselector/core
 
 # Entry function of executor and aggregator under $exp_path
 executor_entry: executor.py
@@ -31,7 +30,7 @@ setup_commands:
 # Default parameters are specified in argParser.py, wherein more description of the parameter can be found
 
 job_conf: 
-    - log_path: $HOME/FedScale/core/evals # Path of log files
+    - log_path: $HOME/FLselector/core/evals # Path of log files
     - job_name: femnist_oort_baseline                   # Generate logs under this folder: log_path/job_name/time_stamp
     - total_worker: 100                      # Number of participants per round, we use K=100 in our paper, large K will be much slower
     - data_set: femnist                     # Dataset: openImg, google_speech, stackoverflow
@@ -53,4 +52,4 @@ job_conf:
     - learning_rate: 0.05
     - batch_size: 25
     - test_bsz: 5
-    - use_cuda: False
+#    - use_cuda: False

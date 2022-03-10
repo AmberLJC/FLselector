@@ -1,16 +1,12 @@
 # Configuration file of Kuiper training experiment
 
 # ========== Cluster configuration ========== 
-# ip address of the parameter server (need 1 GPU)
-ps_ip: h1.fl.gaia-pg0.wisc.cloudlab.us
+ps_ip: h2.sched.gaia-pg0.wisc.cloudlab.us
 
 # ip address of each worker:# of gpus on this worker
 worker_ips:
-    - h1.fl.gaia-pg0.wisc.cloudlab.us:[4] # worker_ip: # of gpus 
-    - h2.fl.gaia-pg0.wisc.cloudlab.us:[4] # worker_ip: # of gpus
-    - h3.fl.gaia-pg0.wisc.cloudlab.us:[4] # worker_ip: # of gpus
-    - h4.fl.gaia-pg0.wisc.cloudlab.us:[4] # worker_ip: # of gpus
-    - h5.fl.gaia-pg0.wisc.cloudlab.us:[4] # worker_ip: # of gpus
+    - h2.sched.gaia-pg0.wisc.cloudlab.us:[6] # worker_ip: # of gpus 
+
 
 
 exp_path: $HOME/FLselector/core
@@ -35,7 +31,7 @@ setup_commands:
 
 job_conf: 
     - log_path: $HOME/FLselector/core/evals # Path of log files
-    - job_name: femnist_oort_budget20                   # Generate logs under this folder: log_path/job_name/time_stamp
+    - job_name: femnist_oort_budget10                   # Generate logs under this folder: log_path/job_name/time_stamp
     - total_worker: 100                      # Number of participants per round, we use K=100 in our paper, large K will be much slower
     - data_set: femnist                     # Dataset: openImg, google_speech, stackoverflow
     - data_dir: /users/JIACHEN/FedScale/dataset/data/femnist/
@@ -56,5 +52,5 @@ job_conf:
     - learning_rate: 0.05
     - batch_size: 25
     - test_bsz: 5
-    - use_cuda: False
-    - client_budget: 20
+#    - use_cuda: False
+    - client_budget: 10
