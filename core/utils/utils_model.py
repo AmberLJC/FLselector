@@ -139,6 +139,7 @@ def test_model(rank, model, test_data, device='cpu', criterion=nn.NLLLoss(), tok
     perplexity_loss = 0.
 
     total_cer, total_wer, num_tokens, num_chars = 0, 0, 0, 0
+    model = model.to(device=device)
 
     model.eval()
     targets_list = []
