@@ -119,7 +119,7 @@ class Executor(job_api_pb2_grpc.JobServiceServicer):
         logging.info("Data partitioner starts ...")
 
         training_sets = DataPartitioner(data=train_dataset, numOfClass=self.args.num_class)
-        training_sets.partition_data_helper(num_clients=self.args.total_worker, self.args.num_clt, data_map_file=self.args.data_map_file)
+        training_sets.partition_data_helper(num_clients=self.args.total_worker, num_clt=self.args.num_clt, data_map_file=self.args.data_map_file)
 
         testing_sets = DataPartitioner(data=test_dataset, numOfClass=self.args.num_class, isTest=True)
         testing_sets.partition_data_helper(num_clients=self.num_executors)
