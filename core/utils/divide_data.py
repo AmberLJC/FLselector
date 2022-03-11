@@ -47,7 +47,7 @@ class DataPartitioner(object):
     def getDataLen(self):
         return self.data_len
 
-    def trace_partition(self, data_map_file):
+    def trace_partition(self, data_map_file,num_clt):
         """Read data mapping from data_map_file. Format: <client_id, sample_name, sample_category, category_id>"""
         logging.info(f"Partitioning data by profile {data_map_file}...")
 
@@ -67,6 +67,8 @@ class DataPartitioner(object):
                     client_id = row[0]
 
                     if client_id not in unique_clientIds:
+                        if num_clt is not None and len(unique_clientIds)+1 > num_clt:
+                            break
                         unique_clientIds[client_id] = len(unique_clientIds)
 
                     clientId_maps[sample_id] = unique_clientIds[client_id]
@@ -79,11 +81,11 @@ class DataPartitioner(object):
             self.partitions[clientId_maps[idx]].append(idx)
 
 
-    def partition_data_helper(self, num_clients, data_map_file=None):
+    def partition_data_helper(self, num_clients, num_clt =None, data_map_file=None):
 
         # read mapping file to partition trace
         if data_map_file is not None:
-            self.trace_partition(data_map_file)
+            self.trace_partition(data_map_file, num_clt)
         else:
             self.uniform_partition(num_clients=num_clients)
 
