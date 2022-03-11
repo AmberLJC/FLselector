@@ -177,7 +177,7 @@ parser.add_argument('--no-bidirectional', dest='bidirectional', action='store_fa
 
 # for resource budget
 parser.add_argument('--client_budget', default=100, type=int, help='Max training time of each client')
-
+parser.add_argument('--num_clt', default=None, type=int, help='Available unique clients')
 
 args, unknown = parser.parse_known_args()
 args.use_cuda = eval(args.use_cuda)
