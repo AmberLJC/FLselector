@@ -507,6 +507,8 @@ class Aggregator(object):
 
             elif len(self.client_result_queue) > 0:
                 self.client_completion_handler(self.client_result_queue.pop(0))
+                logging.info(f"Complete {len(self.stats_util_accumulator)} clients")
+                
                 if len(self.stats_util_accumulator) == self.tasks_round:
                         self.round_completion_handler()
             else:
