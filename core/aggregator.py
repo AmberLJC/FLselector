@@ -238,12 +238,15 @@ class Aggregator(object):
         # Feed metrics to client sampler
         self.stats_util_accumulator.append(results['utility'])
         self.loss_accumulator.append(results['moving_loss'])
-
-        self.client_manager.registerScore(results['clientId'], results['utility'], auxi=math.sqrt(results['moving_loss']),
-            time_stamp=self.epoch,
-            duration=self.virtual_client_clock[results['clientId']]['computation']+self.virtual_client_clock[results['clientId']]['communication']
-        )
-
+        try:
+            self.client_manager.registerScore(results['clientId'], results['utility'], auxi=math.sqrt(results['moving_loss']),
+                time_stamp=self.epoch,
+                duration=self.virtual_client_clock[results['clientId']]['computation']+self.virtual_client_clock[results['clientId']]['communication']
+            )
+            
+        except Exception as ex:
+            logging.info(f"Error: {ex}")
+            
         device = self.device
         """
             [FedAvg] "Communication-Efficient Learning of Deep Networks from Decentralized Data".

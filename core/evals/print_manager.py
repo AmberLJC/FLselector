@@ -68,10 +68,6 @@ def process_cmd(yaml_file):
         pass
 
     print(f"Starting aggregator on {ps_ip}...")
-    with open(f"{job_name}_logging", 'a') as fout:
-        subprocess.Popen(f'ssh {submit_user}{ps_ip} "{setup_cmd} {ps_cmd}"',
-                        shell=True, stdout=fout, stderr=fout)
-
     time.sleep(1)
     # =========== Submit job to each worker ============
     rank_id = 1
@@ -85,11 +81,6 @@ def process_cmd(yaml_file):
                 rank_id += 1
 
                 print(worker_cmd,' &')
-                with open(f"{job_name}_logging", 'a') as fout:
-                    #time.sleep(0.1)
-                    subprocess.Popen(f'ssh {submit_user}{worker} "{setup_cmd} {worker_cmd}"',
-                                    shell=True, stdout=fout, stderr=fout)
-
     # dump the address of running workers
     current_path = os.path.dirname(os.path.abspath(__file__))
     job_name = os.path.join(current_path, job_name)
